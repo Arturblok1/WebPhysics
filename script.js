@@ -20,8 +20,8 @@ window.addEventListener("mouseup", function (e) {
     if (e.button == 0) mpressed = false;
 })
 window.addEventListener("wheel", function (e) {
-    if (e.deltaY > 0) camzoom *= 0.9;
-    if (e.deltaY < 0) camzoom *= 1.1;
+    if (e.deltaY > 0) camzoom *= .8;
+    if (e.deltaY < 0) camzoom *= 1.25;
 })
 
 // physical objects and immovable objects
@@ -47,10 +47,12 @@ setInterval(() => {
         camx += dx / camzoom;
         camy += dy / camzoom;
     }
-    // context.translate(mx,my);
+
+    context.translate(canvas.width/2,canvas.height/2);
     context.scale(camzoom, camzoom);
-    // context.translate(-mx,-my);
+    context.translate(-canvas.width/2,-canvas.height/2);
     context.translate(camx,camy);
+
 
     // object rendering
     // e.g.: \/ \/ \/
@@ -69,6 +71,8 @@ setInterval(() => {
         }
         context.fillRect(physicalObject.x-physicalObject.width/2, -(physicalObject.y-physicalObject.height/2), physicalObject.width, physicalObject.height);
     });
+    // context.fillStyle = "red";
+    // context.fillRect(-1-camx+canvas.width/2,-1-camy+canvas.height/2,2,2);
     //context.fillRect(-20, -20,40,40);
-    
+
 }, 1000/60);
