@@ -3,6 +3,7 @@ canvas.width =  document.body.clientWidth;
 canvas.height = document.body.clientHeight;
 context = canvas.getContext("2d");
 let camx = document.body.clientWidth/2, camy = document.body.clientHeight/2; // camera coordinates
+let camzoom = 1; // camera zoom
 let mx = 0, my = 0, px = 0, py = 0; // mouse coordinates; previous coordinates
 let dx = mx-px, dy = my-py;
 let mpressed = false; // mouse pressed
@@ -18,12 +19,21 @@ window.addEventListener("mousedown", function (e) {
 window.addEventListener("mouseup", function (e) {
     if (e.button == 0) mpressed = false;
 })
+window.addEventListener("wheel", function (e) {
+    if (e.deltaY > 0) camzoom *= 0.9;
+    if (e.deltaY < 0) camzoom *= 1.1;
+})
 
-// physical objects
-let physicalObjects = [];
-physicalObjects.push(new PhysicalObject(0,0,"red",100,100));
-physicalObjects.push(new PhysicalObject(200,200,"blue",100,100));
-physicalObjects.push(new PhysicalObject(400,-400,"green",100,100));
+// physical objects and immovable objects
+let physicalObjects = [], immovableObjects = [];
+
+// hardcoded objects
+physicalObjects.push(new PhysicalObject(0, 0, 100, 100, "density", true, 2000));
+physicalObjects.push(new PhysicalObject(200, -200, 100, 100, "blue"));
+physicalObjects.push(new PhysicalObject(400, 0, 100, 100, "green"));
+
+// ground
+immovableObjects.push(new ImmovableObject(0,-500,1000,100,"grey"));
 
 setInterval(() => {
     canvas.width = document.body.clientWidth;
@@ -34,16 +44,30 @@ setInterval(() => {
 
     // camera movement
     if (mpressed){
-        camx += dx;
-        camy += dy;
+        camx += dx / camzoom;
+        camy += dy / camzoom;
     }
+    // context.translate(mx,my);
+    context.scale(camzoom, camzoom);
+    // context.translate(-mx,-my);
     context.translate(camx,camy);
 
     // object rendering
     // e.g.: \/ \/ \/
+    immovableObjects.forEach(immovableObject => {
+        context.fillStyle = immovableObject.color;
+        context.fillRect(immovableObject.x-immovableObject.width/2, -(immovableObject.y-immovableObject.height/2), immovableObject.width, immovableObject.height);
+    });
     physicalObjects.forEach(physicalObject => {
-        context.fillStyle = physicalObject.color;
-        context.fillRect(physicalObject.x-physicalObject.width/2, physicalObject.y-physicalObject.height/2, physicalObject.width, physicalObject.height);
+        if (physicalObject.color == "density"){
+            let density = physicalObject.density;
+            let color = 128 - density*.0128;
+            color = Math.max(0, Math.min(255, color));
+            context.fillStyle = `rgb(${color},${color},${color})`;
+        } else{
+            context.fillStyle = physicalObject.color;
+        }
+        context.fillRect(physicalObject.x-physicalObject.width/2, -(physicalObject.y-physicalObject.height/2), physicalObject.width, physicalObject.height);
     });
     //context.fillRect(-20, -20,40,40);
     
