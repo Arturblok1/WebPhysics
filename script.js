@@ -28,9 +28,9 @@ window.addEventListener("wheel", function (e) {
 let physicalObjects = [], immovableObjects = [];
 
 // hardcoded objects
-physicalObjects.push(new PhysicalObject(0, 0, 100, 100, 0, "density", true, 2000));
-physicalObjects.push(new PhysicalObject(200, -200, 100, 100, 0, "blue"));
-physicalObjects.push(new PhysicalObject(400, 0, 100, 100, Math.PI/4, "green"));
+physicalObjects.push(new PhysicalObject(0, 0, 100, 100, 0, "rectangle", 2000, true, "density"));
+physicalObjects.push(new PhysicalObject(200, -200, 200, 100, 0, "ellipse", 1000, true, "blue"));
+physicalObjects.push(new PhysicalObject(400, 0, 100, 100, Math.PI/4, "rectangle", 1000 ,true , "green"));
 
 // ground
 immovableObjects.push(new ImmovableObject(0,-500,1000,100,"grey"));
@@ -72,11 +72,23 @@ setInterval(() => {
         }
 
         // rendering
-        context.translate(physicalObject.x, -physicalObject.y);
-        context.rotate(physicalObject.r);
-        context.fillRect(-physicalObject.width/2, -physicalObject.height/2, physicalObject.width, physicalObject.height);
-        context.rotate(-physicalObject.r);
-        context.translate(-physicalObject.x, physicalObject.y);
+        if (physicalObject.shape == "rectangle"){
+            context.translate(physicalObject.x, -physicalObject.y);
+            context.rotate(physicalObject.rotation);
+            context.fillRect(-physicalObject.width/2, -physicalObject.height/2, physicalObject.width, physicalObject.height);
+            context.rotate(-physicalObject.rotation);
+            context.translate(-physicalObject.x, physicalObject.y);
+        } else if (physicalObject.shape == "ellipse"){
+            context.translate(physicalObject.x, -physicalObject.y);
+            context.rotate(physicalObject.rotation);
+            context.scale(physicalObject.width/2, physicalObject.height/2);
+            context.beginPath();
+            context.arc(0, 0, 1, 0, 2*Math.PI);
+            context.fill();
+            context.scale(2/physicalObject.width, 2/physicalObject.height);
+            context.rotate(-physicalObject.rotation);
+            context.translate(-physicalObject.x, physicalObject.y);
+        }
 
         // debug: if physicalObjects[0] collides with physicalObjects[1] draw blue square, else draw red square
         if (physicalObjects[0].CheckCollisionWithPhysicalObject(physicalObjects[1])){
