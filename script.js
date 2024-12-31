@@ -28,9 +28,9 @@ window.addEventListener("wheel", function (e) {
 let physicalObjects = [], immovableObjects = [];
 
 // hardcoded objects
-physicalObjects.push(new PhysicalObject(0, 0, 100, 100, "density", true, 2000));
-physicalObjects.push(new PhysicalObject(200, -200, 100, 100, "blue"));
-physicalObjects.push(new PhysicalObject(400, 0, 100, 100, "green"));
+physicalObjects.push(new PhysicalObject(0, 0, 100, 100, 0, "density", true, 2000));
+physicalObjects.push(new PhysicalObject(200, -200, 100, 100, 0, "blue"));
+physicalObjects.push(new PhysicalObject(400, 0, 100, 100, Math.PI/4, "green"));
 
 // ground
 immovableObjects.push(new ImmovableObject(0,-500,1000,100,"grey"));
@@ -61,6 +61,7 @@ setInterval(() => {
         context.fillRect(immovableObject.x-immovableObject.width/2, -(immovableObject.y-immovableObject.height/2), immovableObject.width, immovableObject.height);
     });
     physicalObjects.forEach(physicalObject => {
+        // color
         if (physicalObject.color == "density"){
             let density = physicalObject.density;
             let color = 128 - density*.0128;
@@ -69,7 +70,23 @@ setInterval(() => {
         } else{
             context.fillStyle = physicalObject.color;
         }
-        context.fillRect(physicalObject.x-physicalObject.width/2, -(physicalObject.y-physicalObject.height/2), physicalObject.width, physicalObject.height);
+
+        // rendering
+        context.translate(physicalObject.x, -physicalObject.y);
+        context.rotate(physicalObject.r);
+        context.fillRect(-physicalObject.width/2, -physicalObject.height/2, physicalObject.width, physicalObject.height);
+        context.rotate(-physicalObject.r);
+        context.translate(-physicalObject.x, physicalObject.y);
+
+        // debug: if physicalObjects[0] collides with physicalObjects[1] draw blue square, else draw red square
+        if (physicalObjects[0].CheckCollisionWithPhysicalObject(physicalObjects[1])){
+            context.fillStyle = "blue";
+        } else{
+            context.fillStyle = "red";
+        }
+        context.fillRect(-100, -100,50,50);
+
+        
     });
     // context.fillStyle = "red";
     // context.fillRect(-1-camx+canvas.width/2,-1-camy+canvas.height/2,2,2);
