@@ -14,7 +14,6 @@ window.addEventListener("mousemove", function (e) {
 })
 window.addEventListener("mousedown", function (e) {
     if (e.button == 0) mpressed = true;
-    
 })
 window.addEventListener("mouseup", function (e) {
     if (e.button == 0) mpressed = false;
@@ -29,7 +28,7 @@ let physicalObjects = [], immovableObjects = [];
 
 // hardcoded objects
 physicalObjects.push(new PhysicalObject(0, 0, 100, 100, 0, "rectangle", 2000, true, "density"));
-physicalObjects.push(new PhysicalObject(200, -200, 200, 100, 0, "ellipse", 1000, true, "blue"));
+physicalObjects.push(new PhysicalObject(200, -200, 200, 100, -.25 * Math.PI, "ellipse", 1000, true, "blue"));
 physicalObjects.push(new PhysicalObject(400, 0, 100, 100, Math.PI/4, "rectangle", 1000 ,true , "green"));
 
 // ground
@@ -43,10 +42,9 @@ setInterval(() => {
     context.clearRect(0,0,canvas.width, canvas.height);
 
     // camera movement
-    if (mpressed){
-        camx += dx / camzoom;
-        camy += dy / camzoom;
-    }
+    camx += dx / camzoom;
+    camy += dy / camzoom;
+
 
     context.translate(canvas.width/2,canvas.height/2);
     context.scale(camzoom, camzoom);
@@ -89,6 +87,8 @@ setInterval(() => {
             context.rotate(-physicalObject.rotation);
             context.translate(-physicalObject.x, physicalObject.y);
         }
+        context.fillStyle = "black";
+        context.fillRect(physicalObject.x-3, -physicalObject.y-3, 6, 6);
 
         // debug: if physicalObjects[0] collides with physicalObjects[1] draw blue square, else draw red square
         if (physicalObjects[0].CheckCollisionWithPhysicalObject(physicalObjects[1])){
