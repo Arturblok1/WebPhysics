@@ -42,9 +42,10 @@ setInterval(() => {
     context.clearRect(0,0,canvas.width, canvas.height);
 
     // camera movement
-    camx += dx / camzoom;
-    camy += dy / camzoom;
-
+    if (mpressed){
+        camx += dx / camzoom;
+        camy += dy / camzoom;
+    }
 
     context.translate(canvas.width/2,canvas.height/2);
     context.scale(camzoom, camzoom);
