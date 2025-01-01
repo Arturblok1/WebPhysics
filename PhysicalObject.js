@@ -92,7 +92,6 @@ class PhysicalObject {
                 x1 /= other.width/2;
                 y1 /= other.height/2;
                 vertices[i][0] = x1; vertices[i][1] = y1;
-                this.v[i] = [x1,y1];
             }
             for (let i = 0; i < vertices.length; i++){
                 // isInside = true;
@@ -114,6 +113,11 @@ class PhysicalObject {
                 }
             }
             return true;
+        }
+        else if (this.shape == "ellipse" && other.shape == "rectangle"){
+            return other.CheckCollisionWithPhysicalObject(this);
+        } else if (this.shape == "ellipse" && other.shape == "ellipse"){
+            // later
         }
     }
 

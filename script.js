@@ -98,15 +98,6 @@ setInterval(() => {
             context.fillStyle = "red";
         }
         context.fillRect(-100, -100,50,50);
-        // color the physicalObject[0].v points green
-        context.fillStyle = "green";
-        context.fillRect(physicalObjects[0].v[0][0]*100-1, physicalObjects[0].v[0][1]*100-1, 2, 2);
-        context.fillRect(physicalObjects[0].v[1][0]*100-1, physicalObjects[0].v[1][1]*100-1, 2, 2);
-        context.fillRect(physicalObjects[0].v[2][0]*100-1, physicalObjects[0].v[2][1]*100-1, 2, 2);
-        context.fillRect(physicalObjects[0].v[3][0]*100-1, physicalObjects[0].v[3][1]*100-1, 2, 2);
-        context.beginPath();
-        context.arc(0,0,100,0,2*Math.PI);
-        context.stroke();
     });
     // context.fillStyle = "red";
     // context.fillRect(-1-camx+canvas.width/2,-1-camy+canvas.height/2,2,2);
