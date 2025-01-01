@@ -10,6 +10,7 @@ class PhysicalObject {
         this.hasGravity = hasGravity;
         this.density = density;
         this.mass = this.width*this.height*this.density;
+        this.v = [[0,0],[0,0],[0,0],[0,0]];
     }
 
     Update(){
@@ -90,7 +91,8 @@ class PhysicalObject {
                 y1 = d*Math.sin(alpha-theta);
                 x1 /= other.width/2;
                 y1 /= other.height/2;
-                vertices[i][0] = (x1<1e-10&&x1>-1e-10)? 0 : x1; vertices[i][1] = (y1<1e-10&&y1>-1e-10)? 0 : y1;
+                vertices[i][0] = x1; vertices[i][1] = y1;
+                this.v[i] = [x1,y1];
             }
             for (let i = 0; i < vertices.length; i++){
                 // isInside = true;
@@ -100,6 +102,15 @@ class PhysicalObject {
 
                 if (c*c>a*a+b*b && c > 0){
                     return false;
+                } else if (c*c<=a*a+b*b){
+                    let xc = -a*c/(a*a+b*b);
+                    if (xc < Math.min(x1,x2)||x2 > Math.max(x1,x2)){
+                        if(x1*x1+y1*y1<=1||x2*x2+y2*y2<=1){
+                            return true;
+                        } else if (x1*x1+y1*y1>1&&x2*x2+y2*y2>1){
+                            return false;
+                        }
+                    }
                 }
             }
             return true;

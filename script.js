@@ -28,7 +28,7 @@ let physicalObjects = [], immovableObjects = [];
 
 // hardcoded objects
 physicalObjects.push(new PhysicalObject(0, 0, 100, 100, 0, "rectangle", 2000, true, "density"));
-physicalObjects.push(new PhysicalObject(200, -200, 200, 100, -.25 * Math.PI, "ellipse", 1000, true, "blue"));
+physicalObjects.push(new PhysicalObject(200, -200, 200, 100, Math.PI / -4, "ellipse", 1000, true, "blue"));
 physicalObjects.push(new PhysicalObject(400, 0, 100, 100, Math.PI/4, "rectangle", 1000 ,true , "green"));
 
 // ground
@@ -73,19 +73,19 @@ setInterval(() => {
         // rendering
         if (physicalObject.shape == "rectangle"){
             context.translate(physicalObject.x, -physicalObject.y);
-            context.rotate(physicalObject.rotation);
-            context.fillRect(-physicalObject.width/2, -physicalObject.height/2, physicalObject.width, physicalObject.height);
             context.rotate(-physicalObject.rotation);
+            context.fillRect(-physicalObject.width/2, -physicalObject.height/2, physicalObject.width, physicalObject.height);
+            context.rotate(physicalObject.rotation);
             context.translate(-physicalObject.x, physicalObject.y);
         } else if (physicalObject.shape == "ellipse"){
             context.translate(physicalObject.x, -physicalObject.y);
-            context.rotate(physicalObject.rotation);
+            context.rotate(-physicalObject.rotation);
             context.scale(physicalObject.width/2, physicalObject.height/2);
             context.beginPath();
             context.arc(0, 0, 1, 0, 2*Math.PI);
             context.fill();
             context.scale(2/physicalObject.width, 2/physicalObject.height);
-            context.rotate(-physicalObject.rotation);
+            context.rotate(physicalObject.rotation);
             context.translate(-physicalObject.x, physicalObject.y);
         }
         context.fillStyle = "black";
@@ -98,8 +98,15 @@ setInterval(() => {
             context.fillStyle = "red";
         }
         context.fillRect(-100, -100,50,50);
-
-        
+        // color the physicalObject[0].v points green
+        context.fillStyle = "green";
+        context.fillRect(physicalObjects[0].v[0][0]*100-1, physicalObjects[0].v[0][1]*100-1, 2, 2);
+        context.fillRect(physicalObjects[0].v[1][0]*100-1, physicalObjects[0].v[1][1]*100-1, 2, 2);
+        context.fillRect(physicalObjects[0].v[2][0]*100-1, physicalObjects[0].v[2][1]*100-1, 2, 2);
+        context.fillRect(physicalObjects[0].v[3][0]*100-1, physicalObjects[0].v[3][1]*100-1, 2, 2);
+        context.beginPath();
+        context.arc(0,0,100,0,2*Math.PI);
+        context.stroke();
     });
     // context.fillStyle = "red";
     // context.fillRect(-1-camx+canvas.width/2,-1-camy+canvas.height/2,2,2);
